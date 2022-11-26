@@ -16,6 +16,6 @@ MonoBehaviour:
   creditsNeeded: 250
   creditSpawnMultiplier: -0.15
   obstacleSpawnMultiplier: 0.25
-  creditMultiplier: 0.33
-  upgradeCostMultiplier: -0.15
+  creditMultiplier: -0.15
+  upgradeCostMultiplier: 0.33
   gracePeriod: 0

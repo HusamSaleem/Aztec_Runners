@@ -17,6 +17,7 @@ public class GuiManager : MonoBehaviour
     public TextMeshProUGUI playerCreditsEarned;
     public TextMeshProUGUI playerTimeSurvived;
     public TextMeshProUGUI changeDirCooldown;
+    private Quest quests;
 
     // For spawn tiles v2
     public Image cooldownTimer;
@@ -32,6 +33,7 @@ public class GuiManager : MonoBehaviour
         cooldownTxt.gameObject.SetActive(false);
         directionInfoTxt.gameObject.SetActive(false);
         playerManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
+        quests = GameObject.FindGameObjectWithTag("Shop").GetComponent<Quest>();
     }
 
     public void Retry()
@@ -69,6 +71,7 @@ public class GuiManager : MonoBehaviour
     {
         shopScreen.gameObject.SetActive(false);
         deathScreen.gameObject.SetActive(true);
+        quests.CheckForCompletions();
     }
 
     private void ShowExtraUI()
@@ -94,10 +97,12 @@ public class GuiManager : MonoBehaviour
             totalCredits.text = "Total Credits: " + playerManager.data.credits;
             log.gameObject.SetActive(true);
             log.text = "Congratulations, you have graduated!! You can continue to play the game";
+            quests.CheckForCompletions();
         } else
         {
+            int creditsNeeded = (int)Math.Ceiling(playerManager.data.creditsNeeded - playerManager.data.credits);
             log.gameObject.SetActive(true);
-            log.text = "Not enough credits to graduate";
+            log.text = "You need " + creditsNeeded + " credits to graduate. Keep grinding";
         }
     }
 }

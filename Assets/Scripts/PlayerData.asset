@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   jumpSpeed: 4
-  perCreditCollected: 0.01
+  perCreditCollected: 0.02
   directionUnlocked: 0
   changeDirCooldown: 2
   creditsCollected: 0
   creditsNeeded: 0
-  credits: 100
+  credits: 0
+  graduated: 0

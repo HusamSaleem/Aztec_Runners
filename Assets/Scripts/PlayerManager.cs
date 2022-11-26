@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
     public PlayerData data;
     private Animator animator;
     private ShopManager shopManager;
+    private AudioManager audioManager;
+    private Quest quests;
 
     // Movement
     private int deathHeight = -5;
@@ -46,6 +48,8 @@ public class PlayerManager : MonoBehaviour
         guiManager = GameObject.Find("UiManager").GetComponent<GuiManager>();
         shopManager = GameObject.FindGameObjectWithTag("Shop").GetComponent<ShopManager>();
         menuManager = GameObject.FindGameObjectWithTag("MainMenu").GetComponent<MenuManager>();
+        audioManager = GameObject.FindGameObjectWithTag("MainMenu").GetComponent<AudioManager>();
+        quests = GameObject.FindGameObjectWithTag("Shop").GetComponent<Quest>();
         ApplyDifficulty(menuManager.selectedDifficulty, menuManager.directionUnlockedMode);
     }
 
@@ -58,8 +62,8 @@ public class PlayerManager : MonoBehaviour
         } else
         {
             timeSurvived += Time.deltaTime;
-            UpdatePlayerPosition();
             guiManager.UpdatePlayerTexts();
+            UpdatePlayerPosition();
         }
     }
 
@@ -109,19 +113,22 @@ public class PlayerManager : MonoBehaviour
 
     private void PlayerDied()
     {
+        audioManager.LowerVolume();
         playerUi.gameObject.SetActive(false);
         data.credits += data.creditsCollected;
         dead = true;
         tileSpawner.StopGame();
         changedDirTime = 0.0f;
         deathScreen.gameObject.SetActive(true);
+        quests.CheckForCompletions();
         guiManager.UpdateDeathScreenTexts();
-        data.creditsCollected = 0;
     }
 
     public void RestartGame()
     {
+        data.creditsCollected = 0;
         tileSpawner.StartGame();
+        audioManager.IncreaseVolume();
         deathScreen.gameObject.SetActive(false);
         ResetCharacter();
         timeSurvived = 0.0f;

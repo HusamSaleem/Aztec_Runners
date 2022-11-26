@@ -5,7 +5,7 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
     public Transform target;
-    public float trailDistance = 4.0f;
+    public float trailDistance = 4f;
     public float heightOffset = 3.0f;
     public float cameraDelay = 0.05f;
 

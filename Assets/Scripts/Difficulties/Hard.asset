@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Hard
   creditsNeeded: 160
   creditSpawnMultiplier: -0.05
-  obstacleSpawnMultiplier: 12
-  creditMultiplier: 15
-  upgradeCostMultiplier: -0.05
+  obstacleSpawnMultiplier: 0.12
+  creditMultiplier: -0.05
+  upgradeCostMultiplier: 0.15
   gracePeriod: 1
