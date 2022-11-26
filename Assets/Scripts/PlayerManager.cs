@@ -7,26 +7,20 @@ public class PlayerManager : MonoBehaviour
 {
     private TileSpawner tileSpawner;
     private MenuManager menuManager;
-    // UI
     [SerializeField]
     private Canvas deathScreen;
     [SerializeField]
     private Canvas playerUi;
     private GuiManager guiManager;
-
-    // Constants
-    private int deathHeight = -5;
-    [System.NonSerialized]
-    public float speed = 7.0f;
-    private float gravity = -10f;
-    private float jumpSpeed = 4.0f;
-    [System.NonSerialized]
-    public float perCreditCollected = 0.01f;
-    [System.NonSerialized]
-    public bool directionUnlocked = true;
+    public PlayerData data;
+    private Animator animator;
+    private ShopManager shopManager;
 
     // Movement
-    private bool dead = false;
+    private int deathHeight = -5;
+    private int gravity = -10;
+    [System.NonSerialized]
+    public bool dead = false;
     private bool turnLeft, turnRight;
     [System.NonSerialized]
     public Vector3 playerRotation = Vector3.forward;
@@ -35,20 +29,9 @@ public class PlayerManager : MonoBehaviour
     [System.NonSerialized]
     public float changedDirTime = 0.0f;
     [System.NonSerialized]
-    public float changeDirCooldown = 2.0f;
+    public float timeSurvived = 0.0f;
     [System.NonSerialized]
     public GameObject currentTile; // Important to know what tile the player is stepping on
-
-    // Player Stats
-    [System.NonSerialized]
-    public float creditsCollected = 0.0f;
-    [System.NonSerialized]
-    public float credits = 100.0f;
-    [System.NonSerialized]
-    public float timeSurvived = 0.0f;
-
-    private Animator animator;
-    private ShopManager shopManager;
 
     private void Awake()
     {
@@ -99,10 +82,10 @@ public class PlayerManager : MonoBehaviour
         if (characterController.isGrounded)
         {
             animator.SetBool("Jump", false);
-            moveVelocity = transform.forward * speed;
+            moveVelocity = transform.forward * data.speed;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                moveVelocity.y = jumpSpeed;
+                moveVelocity.y = data.jumpSpeed;
                 animator.SetBool("Jump", true);
             }
         }
@@ -112,27 +95,28 @@ public class PlayerManager : MonoBehaviour
 
     private void ApplyDifficulty(Difficulty difficulty, bool directionUnlocked)
     {
-        this.directionUnlocked = directionUnlocked;
+        data.directionUnlocked = directionUnlocked;
         if (!difficulty.gracePeriod)
         {
             tileSpawner.gracePeriod = 0;
         }
-        perCreditCollected = perCreditCollected + (perCreditCollected * difficulty.creditMultiplier);
+        data.perCreditCollected = data.perCreditCollected + (data.perCreditCollected * difficulty.creditMultiplier);
         tileSpawner.spawnObstacleChance = tileSpawner.spawnObstacleChance + (tileSpawner.spawnObstacleChance * difficulty.obstacleSpawnMultiplier);
         tileSpawner.spawnCreditChance = tileSpawner.spawnCreditChance + (tileSpawner.spawnCreditChance * difficulty.creditSpawnMultiplier);
+        data.creditsNeeded = difficulty.creditsNeeded;
         shopManager.ApplyUpgradeCosts(difficulty.upgradeCostMultiplier);
     }
 
     private void PlayerDied()
     {
         playerUi.gameObject.SetActive(false);
-        credits += creditsCollected;
+        data.credits += data.creditsCollected;
         dead = true;
         tileSpawner.StopGame();
         changedDirTime = 0.0f;
         deathScreen.gameObject.SetActive(true);
         guiManager.UpdateDeathScreenTexts();
-        creditsCollected = 0;
+        data.creditsCollected = 0;
     }
 
     public void RestartGame()
@@ -162,7 +146,7 @@ public class PlayerManager : MonoBehaviour
         if (other.tag == "Credit")
         {
             Destroy(other.gameObject);
-            creditsCollected = (float)Math.Round(creditsCollected + perCreditCollected, 3);
+            data.creditsCollected = (float)Math.Round(data.creditsCollected + data.perCreditCollected, 3);
         }
     }
 

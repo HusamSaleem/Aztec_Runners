@@ -1,11 +1,14 @@
-public class Difficulty
+
+using UnityEngine;
+
+[CreateAssetMenu]
+public class Difficulty : ScriptableObject
 {
-    public string name;
-    public int difficultyIndex;
+    public new string name;
     public int creditsNeeded;
-    public float creditMultiplier;
-    public float obstacleSpawnMultiplier;
-    public float upgradeCostMultiplier;
     public float creditSpawnMultiplier;
+    public float obstacleSpawnMultiplier;
+    public float creditMultiplier;
+    public float upgradeCostMultiplier;
     public bool gracePeriod;
 }

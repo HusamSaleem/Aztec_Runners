@@ -49,7 +49,7 @@ public class TileSpawner : MonoBehaviour
     {
         if (gameStarted)
         {
-            if (playerManager.directionUnlocked)
+            if (playerManager.data.directionUnlocked)
             {
                 SpawnTilesV2();
             } else
@@ -87,7 +87,7 @@ public class TileSpawner : MonoBehaviour
             mainDirection = direction;
             previousTilePosition = playerManager.currentTile.transform.position;
             changedDir = true;
-            playerManager.changedDirTime = playerManager.changeDirCooldown;
+            playerManager.changedDirTime = playerManager.data.changeDirCooldown;
         }
         if (Input.GetKeyDown(KeyCode.E) && !changedDir)
         {
@@ -96,7 +96,7 @@ public class TileSpawner : MonoBehaviour
             mainDirection = direction;
             previousTilePosition = playerManager.currentTile.transform.position;
             changedDir = true;
-            playerManager.changedDirTime = playerManager.changeDirCooldown;
+            playerManager.changedDirTime = playerManager.data.changeDirCooldown;
         }
 
         float dist = Vector3.Distance(previousTilePosition, player.transform.position);

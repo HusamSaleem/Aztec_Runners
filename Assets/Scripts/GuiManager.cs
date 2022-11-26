@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +10,7 @@ public class GuiManager : MonoBehaviour
     public TextMeshProUGUI creditsEarned;
     public TextMeshProUGUI timeSurvived;
     public TextMeshProUGUI totalCredits;
+    public TextMeshProUGUI log;
 
     // Player UI
     private PlayerManager playerManager;
@@ -37,22 +36,23 @@ public class GuiManager : MonoBehaviour
 
     public void Retry()
     {
+        log.gameObject.SetActive(false);
         playerManager.RestartGame();
     }
 
     public void UpdateDeathScreenTexts()
     {
-        creditsEarned.text = "Credits Earned: " + playerManager.creditsCollected;
+        creditsEarned.text = "Credits Earned: " + playerManager.data.creditsCollected;
         timeSurvived.text = "Time Survived: " + Math.Round(playerManager.timeSurvived, 2) + "s";
-        totalCredits.text = "Total Credits: " + playerManager.credits;
+        totalCredits.text = "Total Credits: " + playerManager.data.credits;
     }
 
     public void UpdatePlayerTexts()
     {
-        playerCreditsEarned.text = playerManager.creditsCollected.ToString();
+        playerCreditsEarned.text = playerManager.data.creditsCollected.ToString();
         playerTimeSurvived.text = Math.Round(playerManager.timeSurvived, 2).ToString();
 
-        if (playerManager.directionUnlocked)
+        if (playerManager.data.directionUnlocked)
         {
             ShowExtraUI();
             changeDirCooldown.text = Math.Round(playerManager.changedDirTime, 2).ToString();
@@ -76,5 +76,28 @@ public class GuiManager : MonoBehaviour
         cooldownTimer.gameObject.SetActive(true);
         cooldownTxt.gameObject.SetActive(true);
         directionInfoTxt.gameObject.SetActive(true);
+    }
+
+    public void Graduate()
+    {
+        if (playerManager.data.graduated)
+        {
+            log.gameObject.SetActive(true);
+            log.text = "You have already graduated dummy";
+            return;
+        }
+
+        if (playerManager.data.credits >= playerManager.data.creditsNeeded)
+        {
+            playerManager.data.credits -= playerManager.data.creditsNeeded;
+            playerManager.data.graduated = true;
+            totalCredits.text = "Total Credits: " + playerManager.data.credits;
+            log.gameObject.SetActive(true);
+            log.text = "Congratulations, you have graduated!! You can continue to play the game";
+        } else
+        {
+            log.gameObject.SetActive(true);
+            log.text = "Not enough credits to graduate";
+        }
     }
 }
